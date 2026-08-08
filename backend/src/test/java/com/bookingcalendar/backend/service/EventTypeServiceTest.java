@@ -10,6 +10,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
@@ -23,7 +24,7 @@ class EventTypeServiceTest {
     private EventTypeRepository eventTypeRepository;
 
     @Spy
-    private EventTypeMapper eventTypeMapper = EventTypeMapper.INSTANCE;
+    private EventTypeMapper eventTypeMapper = Mappers.getMapper(EventTypeMapper.class);
 
     @InjectMocks
     private EventTypeService eventTypeService;
