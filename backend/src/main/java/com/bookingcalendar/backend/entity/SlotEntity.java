@@ -22,7 +22,7 @@ import java.time.OffsetDateTime;
 @ToString
 @Entity
 @Table(name = "slots")
-public class Slot {
+public class SlotEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -41,7 +41,7 @@ public class Slot {
     @Column(nullable = false)
     private SlotStatus status;
 
-    public Slot(String eventTypeId, OffsetDateTime startDateTime, OffsetDateTime endDateTime, SlotStatus status) {
+    public SlotEntity(String eventTypeId, OffsetDateTime startDateTime, OffsetDateTime endDateTime, SlotStatus status) {
         this.eventTypeId = eventTypeId;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;

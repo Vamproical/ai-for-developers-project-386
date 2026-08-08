@@ -1,6 +1,6 @@
 package com.bookingcalendar.backend.controller;
 
-import com.bookingcalendar.backend.entity.EventType;
+import com.bookingcalendar.backend.entity.EventTypeEntity;
 import com.bookingcalendar.backend.repository.EventTypeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,8 +31,8 @@ class PublicEventTypesControllerIntegrationTest {
 
     @Test
     void listEventTypes_returnsHttp200AndCorrectJsonShape() throws Exception {
-        eventTypeRepository.save(new EventType("Consultation", "A consultation call", 30));
-        eventTypeRepository.save(new EventType("Workshop", "A workshop session", 60));
+        eventTypeRepository.save(new EventTypeEntity("Consultation", "A consultation call", 30));
+        eventTypeRepository.save(new EventTypeEntity("Workshop", "A workshop session", 60));
 
         mockMvc.perform(get("/event-types"))
                 .andExpect(status().isOk())

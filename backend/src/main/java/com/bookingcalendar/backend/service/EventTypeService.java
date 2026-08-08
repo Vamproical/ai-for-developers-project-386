@@ -1,6 +1,6 @@
 package com.bookingcalendar.backend.service;
 
-import com.bookingcalendar.backend.entity.EventType;
+import com.bookingcalendar.backend.entity.EventTypeEntity;
 import com.bookingcalendar.backend.mapper.EventTypeMapper;
 import com.bookingcalendar.backend.repository.EventTypeRepository;
 import com.bookingcalendar.dto.CreateEventTypeRequest;
@@ -30,19 +30,19 @@ public class EventTypeService {
     @Transactional
     public com.bookingcalendar.dto.EventType create(CreateEventTypeRequest request) {
         validateDuration(request.getDurationMinutes());
-        EventType entity = eventTypeMapper.toEntity(request);
-        EventType saved = eventTypeRepository.save(entity);
+        EventTypeEntity entity = eventTypeMapper.toEntity(request);
+        EventTypeEntity saved = eventTypeRepository.save(entity);
         return eventTypeMapper.toDto(saved);
     }
 
     @Transactional
     public com.bookingcalendar.dto.EventType update(String id, UpdateEventTypeRequest request) {
-        EventType entity = getByIdOrThrow(id);
+        EventTypeEntity entity = getByIdOrThrow(id);
         if (request.getDurationMinutes() != null) {
             validateDuration(request.getDurationMinutes());
         }
         eventTypeMapper.updateEntity(request, entity);
-        EventType updated = eventTypeRepository.save(entity);
+        EventTypeEntity updated = eventTypeRepository.save(entity);
         return eventTypeMapper.toDto(updated);
     }
 
@@ -54,7 +54,7 @@ public class EventTypeService {
         eventTypeRepository.deleteById(id);
     }
 
-    private EventType getByIdOrThrow(String id) {
+    private EventTypeEntity getByIdOrThrow(String id) {
         return eventTypeRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "EventType not found with id: " + id));
     }

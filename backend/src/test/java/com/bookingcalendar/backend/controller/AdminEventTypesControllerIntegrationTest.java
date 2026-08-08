@@ -1,6 +1,6 @@
 package com.bookingcalendar.backend.controller;
 
-import com.bookingcalendar.backend.entity.EventType;
+import com.bookingcalendar.backend.entity.EventTypeEntity;
 import com.bookingcalendar.backend.repository.EventTypeRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,8 +39,8 @@ class AdminEventTypesControllerIntegrationTest {
 
     @Test
     void listEventTypes_returnsHttp200AndAllEventTypes() throws Exception {
-        eventTypeRepository.save(new EventType("Consultation", "A consultation call", 30));
-        eventTypeRepository.save(new EventType("Workshop", "A workshop session", 60));
+        eventTypeRepository.save(new EventTypeEntity("Consultation", "A consultation call", 30));
+        eventTypeRepository.save(new EventTypeEntity("Workshop", "A workshop session", 60));
 
         mockMvc.perform(get("/admin/event-types"))
                 .andExpect(status().isOk())
@@ -90,7 +90,7 @@ class AdminEventTypesControllerIntegrationTest {
 
     @Test
     void updateEventType_returnsUpdatedObject() throws Exception {
-        EventType created = eventTypeRepository.save(new EventType("Original", "Original desc", 30));
+        EventTypeEntity created = eventTypeRepository.save(new EventTypeEntity("Original", "Original desc", 30));
 
         Map<String, Object> request = Map.of(
                 "name", "Updated Name",
@@ -110,7 +110,7 @@ class AdminEventTypesControllerIntegrationTest {
 
     @Test
     void updateEventType_partialUpdateKeepsUnchangedFields() throws Exception {
-        EventType created = eventTypeRepository.save(new EventType("Original", "Original desc", 30));
+        EventTypeEntity created = eventTypeRepository.save(new EventTypeEntity("Original", "Original desc", 30));
 
         Map<String, Object> request = Map.of("name", "Only Name Changed");
 
@@ -136,7 +136,7 @@ class AdminEventTypesControllerIntegrationTest {
 
     @Test
     void updateEventType_returns400WhenDurationIsNegative() throws Exception {
-        EventType created = eventTypeRepository.save(new EventType("Original", "Original desc", 30));
+        EventTypeEntity created = eventTypeRepository.save(new EventTypeEntity("Original", "Original desc", 30));
 
         Map<String, Object> request = Map.of("durationMinutes", -5);
 
@@ -148,7 +148,7 @@ class AdminEventTypesControllerIntegrationTest {
 
     @Test
     void deleteEventType_returns204AndEntityIsDeleted() throws Exception {
-        EventType created = eventTypeRepository.save(new EventType("To Delete", "Will be deleted", 30));
+        EventTypeEntity created = eventTypeRepository.save(new EventTypeEntity("To Delete", "Will be deleted", 30));
         String id = created.getId();
 
         mockMvc.perform(delete("/admin/event-types/" + id))

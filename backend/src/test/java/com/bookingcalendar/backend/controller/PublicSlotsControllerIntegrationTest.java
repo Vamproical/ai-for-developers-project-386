@@ -1,6 +1,6 @@
 package com.bookingcalendar.backend.controller;
 
-import com.bookingcalendar.backend.entity.Slot;
+import com.bookingcalendar.backend.entity.SlotEntity;
 import com.bookingcalendar.backend.repository.SlotRepository;
 import com.bookingcalendar.dto.SlotStatus;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,8 +36,8 @@ class PublicSlotsControllerIntegrationTest {
 
     @Test
     void listSlots_returnsAllSlotsWhenNoFilters() throws Exception {
-        slotRepository.save(new Slot("type-1", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
-        slotRepository.save(new Slot("type-2", baseDate.plusHours(1), baseDate.plusHours(1).plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-1", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-2", baseDate.plusHours(1), baseDate.plusHours(1).plusMinutes(30), SlotStatus.AVAILABLE));
 
         mockMvc.perform(get("/slots"))
                 .andExpect(status().isOk())
@@ -47,8 +47,8 @@ class PublicSlotsControllerIntegrationTest {
 
     @Test
     void listSlots_filtersByEventTypeId() throws Exception {
-        slotRepository.save(new Slot("type-1", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
-        slotRepository.save(new Slot("type-2", baseDate.plusHours(1), baseDate.plusHours(1).plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-1", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-2", baseDate.plusHours(1), baseDate.plusHours(1).plusMinutes(30), SlotStatus.AVAILABLE));
 
         mockMvc.perform(get("/slots").param("eventTypeId", "type-1"))
                 .andExpect(status().isOk())
@@ -62,8 +62,8 @@ class PublicSlotsControllerIntegrationTest {
         OffsetDateTime from = baseDate.minusHours(1);
         OffsetDateTime to = baseDate.plusHours(2);
 
-        slotRepository.save(new Slot("type-1", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
-        slotRepository.save(new Slot("type-1", baseDate.plusDays(1), baseDate.plusDays(1).plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-1", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-1", baseDate.plusDays(1), baseDate.plusDays(1).plusMinutes(30), SlotStatus.AVAILABLE));
 
         mockMvc.perform(get("/slots")
                         .param("from", from.toString())
@@ -78,9 +78,9 @@ class PublicSlotsControllerIntegrationTest {
         OffsetDateTime from = baseDate.minusHours(1);
         OffsetDateTime to = baseDate.plusHours(2);
 
-        slotRepository.save(new Slot("type-1", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
-        slotRepository.save(new Slot("type-1", baseDate.plusHours(1), baseDate.plusHours(1).plusMinutes(30), SlotStatus.AVAILABLE));
-        slotRepository.save(new Slot("type-2", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-1", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-1", baseDate.plusHours(1), baseDate.plusHours(1).plusMinutes(30), SlotStatus.AVAILABLE));
+        slotRepository.save(new SlotEntity("type-2", baseDate, baseDate.plusMinutes(30), SlotStatus.AVAILABLE));
 
         mockMvc.perform(get("/slots")
                         .param("eventTypeId", "type-1")

@@ -1,6 +1,6 @@
 package com.bookingcalendar.backend.service;
 
-import com.bookingcalendar.backend.entity.EventType;
+import com.bookingcalendar.backend.entity.EventTypeEntity;
 import com.bookingcalendar.backend.mapper.EventTypeMapper;
 import com.bookingcalendar.backend.repository.EventTypeRepository;
 import com.bookingcalendar.dto.EventTypeList;
@@ -31,7 +31,7 @@ class EventTypeServiceTest {
 
     @Test
     void listAll_returnsEventTypeListWithItems() {
-        EventType entity = new EventType("Consultation", "A consultation call", 30);
+        EventTypeEntity entity = new EventTypeEntity("Consultation", "A consultation call", 30);
         entity.setId("test-id");
         when(eventTypeRepository.findAll()).thenReturn(List.of(entity));
 

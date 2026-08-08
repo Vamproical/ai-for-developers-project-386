@@ -17,7 +17,7 @@ import lombok.ToString;
 @ToString
 @Entity
 @Table(name = "event_types")
-public class EventType {
+public class EventTypeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -32,7 +32,7 @@ public class EventType {
     @Column(name = "duration_minutes", nullable = false)
     private Integer durationMinutes;
 
-    public EventType(String name, String description, Integer durationMinutes) {
+    public EventTypeEntity(String name, String description, Integer durationMinutes) {
         this.name = name;
         this.description = description;
         this.durationMinutes = durationMinutes;
