@@ -34,6 +34,12 @@ export const scheduleFormSchema = z.object({
   return true;
 }, { message: 'Start date must be before end date', path: ['startDate'] });
 
+export const settingsFormSchema = z.object({
+  name: z.string().min(1, 'Display name is required'),
+  timezone: z.string().min(1, 'Timezone is required'),
+});
+
 export type BookingFormValues = z.infer<typeof bookingFormSchema>;
 export type EventTypeFormValues = z.infer<typeof eventTypeFormSchema>;
 export type ScheduleFormValues = z.infer<typeof scheduleFormSchema>;
+export type SettingsFormValues = z.infer<typeof settingsFormSchema>;
