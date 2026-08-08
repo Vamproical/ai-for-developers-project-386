@@ -11,7 +11,7 @@ import {
   EmptyState,
   Stack,
 } from '@mantine/core';
-import { IconCalendar, IconX } from '@tabler/icons-react';
+import { IconX } from '@tabler/icons-react';
 import { useAdminBookings, useCancelBooking } from '../hooks/useAdminBookings';
 import { useEventTypes } from '@/features/event-types/hooks/useEventTypes';
 import { useOwnerStore } from '@/shared/stores/owner';

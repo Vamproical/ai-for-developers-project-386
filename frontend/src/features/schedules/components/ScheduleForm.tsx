@@ -30,7 +30,6 @@ export function ScheduleForm({ mode, schedule, onClose }: ScheduleFormProps) {
   const {
     control,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<ScheduleFormValues>({
     resolver: zodResolver(scheduleFormSchema),

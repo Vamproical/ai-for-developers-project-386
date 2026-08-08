@@ -14,6 +14,8 @@ import type { Schedule } from '@/shared/api/types';
 import { DayOfWeek } from '@/shared/api/types';
 import { useSchedules, useDeleteSchedule } from '../hooks/useSchedules';
 import { ScheduleForm } from '../components/ScheduleForm';
+import { useOwnerStore } from '@/shared/stores/owner';
+import { toOwnerTime, formatDate } from '@/shared/lib/timezone';
 
 const DAY_LABELS: Record<number, string> = {
   [DayOfWeek.Monday]: 'Mon',
@@ -30,6 +32,7 @@ function formatDaysOfWeek(days: number[]): string {
 }
 
 export function SchedulesPage() {
+  const { settings } = useOwnerStore();
   const { data: schedules, isLoading } = useSchedules();
   const deleteMutation = useDeleteSchedule();
   const [formOpen, setFormOpen] = useState(false);
@@ -90,45 +93,49 @@ export function SchedulesPage() {
             </Table.Tr>
           </Table.Thead>
           <Table.Tbody>
-            {schedules.map((schedule) => (
-              <Table.Tr key={schedule.id}>
-                <Table.Td>{formatDaysOfWeek(schedule.daysOfWeek)}</Table.Td>
-                <Table.Td>
-                  <Badge variant="light">{schedule.startTime} – {schedule.endTime}</Badge>
-                </Table.Td>
-                <Table.Td>
-                  {new Date(schedule.startDate).toLocaleDateString()} –{' '}
-                  {new Date(schedule.endDate).toLocaleDateString()}
-                </Table.Td>
-                <Table.Td>
-                  {schedule.slotDurationMinutes ? (
-                    <Badge variant="light">{schedule.slotDurationMinutes} min</Badge>
-                  ) : (
-                    '—'
-                  )}
-                </Table.Td>
-                <Table.Td>
-                  <Group gap="xs">
-                    <ActionIcon
-                      variant="subtle"
-                      color="blue"
-                      onClick={() => handleEdit(schedule)}
-                      aria-label="Edit"
-                    >
-                      <IconEdit size={16} />
-                    </ActionIcon>
-                    <ActionIcon
-                      variant="subtle"
-                      color="red"
-                      onClick={() => handleDeleteClick(schedule.id)}
-                      aria-label="Delete"
-                    >
-                      <IconTrash size={16} />
-                    </ActionIcon>
-                  </Group>
-                </Table.Td>
-              </Table.Tr>
-            ))}
+            {schedules.map((schedule) => {
+              const startOwnerTime = toOwnerTime(schedule.startDate, settings.timezone);
+              const endOwnerTime = toOwnerTime(schedule.endDate, settings.timezone);
+
+              return (
+                <Table.Tr key={schedule.id}>
+                  <Table.Td>{formatDaysOfWeek(schedule.daysOfWeek)}</Table.Td>
+                  <Table.Td>
+                    <Badge variant="light">{schedule.startTime} – {schedule.endTime}</Badge>
+                  </Table.Td>
+                  <Table.Td>
+                    {formatDate(startOwnerTime)} – {formatDate(endOwnerTime)}
+                  </Table.Td>
+                  <Table.Td>
+                    {schedule.slotDurationMinutes ? (
+                      <Badge variant="light">{schedule.slotDurationMinutes} min</Badge>
+                    ) : (
+                      '—'
+                    )}
+                  </Table.Td>
+                  <Table.Td>
+                    <Group gap="xs">
+                      <ActionIcon
+                        variant="subtle"
+                        color="blue"
+                        onClick={() => handleEdit(schedule)}
+                        aria-label="Edit"
+                      >
+                        <IconEdit size={16} />
+                      </ActionIcon>
+                      <ActionIcon
+                        variant="subtle"
+                        color="red"
+                        onClick={() => handleDeleteClick(schedule.id)}
+                        aria-label="Delete"
+                      >
+                        <IconTrash size={16} />
+                      </ActionIcon>
+                    </Group>
+                  </Table.Td>
+                </Table.Tr>
+              );
+            })}
           </Table.Tbody>
         </Table>
       ) : (
