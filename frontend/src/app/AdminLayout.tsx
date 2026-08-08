@@ -1,20 +1,6 @@
 import { AppShell, Group, NavLink, Text } from '@mantine/core';
-import {
-  IconCalendarEvent,
-  IconCalendarStats,
-  IconClock,
-  IconDashboard,
-  IconSettings,
-} from '@tabler/icons-react';
 import { useNavigate, useLocation, Outlet } from 'react-router-dom';
-
-const navItems = [
-  { label: 'Dashboard', icon: IconDashboard, path: '/admin' },
-  { label: 'Event Types', icon: IconCalendarEvent, path: '/admin/event-types' },
-  { label: 'Schedules', icon: IconClock, path: '/admin/schedules' },
-  { label: 'Bookings', icon: IconCalendarStats, path: '/admin/bookings' },
-  { label: 'Settings', icon: IconSettings, path: '/admin/settings' },
-];
+import { adminNavItems } from '@/shared/ui/admin-nav';
 
 export function AdminLayout() {
   const navigate = useNavigate();
@@ -33,7 +19,7 @@ export function AdminLayout() {
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        {navItems.map((item) => {
+        {adminNavItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <NavLink

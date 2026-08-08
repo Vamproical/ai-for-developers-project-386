@@ -1,18 +1,6 @@
 import { SimpleGrid, Card, Text, Group } from '@mantine/core';
-import {
-  IconCalendarEvent,
-  IconCalendarStats,
-  IconClock,
-  IconSettings,
-} from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-
-const sections = [
-  { label: 'Event Types', description: 'Manage your event types', icon: IconCalendarEvent, path: '/admin/event-types' },
-  { label: 'Schedules', description: 'Set your availability', icon: IconClock, path: '/admin/schedules' },
-  { label: 'Bookings', description: 'View and manage bookings', icon: IconCalendarStats, path: '/admin/bookings' },
-  { label: 'Settings', description: 'Configure your preferences', icon: IconSettings, path: '/admin/settings' },
-];
+import { adminNavItems } from '@/shared/ui/admin-nav';
 
 export function AdminDashboardPage() {
   const navigate = useNavigate();
@@ -21,7 +9,7 @@ export function AdminDashboardPage() {
     <div>
       <Text size="xl" fw={600} mb="md">Dashboard</Text>
       <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="md">
-        {sections.map((section) => (
+        {adminNavItems.filter((item) => item.path !== '/admin').map((section) => (
           <Card
             key={section.path}
             shadow="sm"

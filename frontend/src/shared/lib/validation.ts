@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
 export const bookingFormSchema = z.object({
+  slotId: z.string().min(1, 'Slot is required'),
+  eventTypeId: z.string().min(1, 'Event type is required'),
   guestName: z.string().min(1, 'Name is required'),
   guestEmail: z.string().email('Invalid email format'),
   guestPhone: z.string().optional(),

@@ -5,6 +5,8 @@ describe('validation schemas', () => {
   describe('bookingFormSchema', () => {
     it('validates correct booking data', () => {
       const result = bookingFormSchema.safeParse({
+        slotId: 'slot-1',
+        eventTypeId: 'et-1',
         guestName: 'John Doe',
         guestEmail: 'john@example.com',
         guestPhone: '+1234567890',
@@ -13,8 +15,30 @@ describe('validation schemas', () => {
       expect(result.success).toBe(true);
     });
 
+    it('rejects missing slotId', () => {
+      const result = bookingFormSchema.safeParse({
+        slotId: '',
+        eventTypeId: 'et-1',
+        guestName: 'John Doe',
+        guestEmail: 'john@example.com',
+      });
+      expect(result.success).toBe(false);
+    });
+
+    it('rejects missing eventTypeId', () => {
+      const result = bookingFormSchema.safeParse({
+        slotId: 'slot-1',
+        eventTypeId: '',
+        guestName: 'John Doe',
+        guestEmail: 'john@example.com',
+      });
+      expect(result.success).toBe(false);
+    });
+
     it('rejects empty name', () => {
       const result = bookingFormSchema.safeParse({
+        slotId: 'slot-1',
+        eventTypeId: 'et-1',
         guestName: '',
         guestEmail: 'john@example.com',
       });
@@ -23,6 +47,8 @@ describe('validation schemas', () => {
 
     it('rejects invalid email', () => {
       const result = bookingFormSchema.safeParse({
+        slotId: 'slot-1',
+        eventTypeId: 'et-1',
         guestName: 'John Doe',
         guestEmail: 'not-an-email',
       });
@@ -31,6 +57,8 @@ describe('validation schemas', () => {
 
     it('allows optional fields', () => {
       const result = bookingFormSchema.safeParse({
+        slotId: 'slot-1',
+        eventTypeId: 'et-1',
         guestName: 'John Doe',
         guestEmail: 'john@example.com',
       });

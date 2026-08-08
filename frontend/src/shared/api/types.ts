@@ -1,3 +1,19 @@
+export type BookingStatus = 'confirmed' | 'cancelled';
+
+export type SlotStatus = 'available' | 'booked' | 'blocked';
+
+export const DayOfWeek = {
+  Sunday: 0,
+  Monday: 1,
+  Tuesday: 2,
+  Wednesday: 3,
+  Thursday: 4,
+  Friday: 5,
+  Saturday: 6,
+} as const;
+
+export type DayOfWeek = (typeof DayOfWeek)[keyof typeof DayOfWeek];
+
 export interface Owner {
   id: string;
   name: string;
@@ -16,7 +32,7 @@ export interface Slot {
   eventTypeId: string;
   startDateTime: string;
   endDateTime: string;
-  status: 'available' | 'booked' | 'blocked';
+  status: SlotStatus;
 }
 
 export interface Booking {
@@ -28,12 +44,12 @@ export interface Booking {
   guestPhone?: string;
   comment?: string;
   createdAt: string;
-  status: 'confirmed' | 'cancelled';
+  status: BookingStatus;
 }
 
 export interface Schedule {
   id: string;
-  daysOfWeek: number[];
+  daysOfWeek: DayOfWeek[];
   startTime: string;
   endTime: string;
   startDate: string;
@@ -60,7 +76,7 @@ export interface CreateSlotRequest {
 }
 
 export interface CreateScheduleRequest {
-  daysOfWeek: number[];
+  daysOfWeek: DayOfWeek[];
   startTime: string;
   endTime: string;
   startDate: string;
@@ -78,7 +94,7 @@ export interface CreateBookingRequest {
 }
 
 export interface UpdateBookingStatusRequest {
-  status: 'confirmed' | 'cancelled';
+  status: BookingStatus;
 }
 
 export interface EventTypeList {

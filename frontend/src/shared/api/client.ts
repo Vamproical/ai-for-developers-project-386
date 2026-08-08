@@ -1,4 +1,4 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4010';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4010';
 
 export interface ApiErrorData {
   code: number;
@@ -34,4 +34,15 @@ export async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> 
   }
 
   return response.json();
+}
+
+export function buildQueryString(params: Record<string, string | undefined>): string {
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined) {
+      query.set(key, value);
+    }
+  }
+  const queryString = query.toString();
+  return queryString ? `?${queryString}` : '';
 }

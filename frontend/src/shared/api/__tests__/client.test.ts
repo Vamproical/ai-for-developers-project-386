@@ -1,7 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { apiFetch, ApiRequestError } from '../client';
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4010';
+import { apiFetch, ApiRequestError, BASE_URL } from '../client';
 
 beforeEach(() => {
   vi.stubGlobal('fetch', vi.fn());

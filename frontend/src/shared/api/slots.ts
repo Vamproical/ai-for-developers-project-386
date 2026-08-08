@@ -1,4 +1,4 @@
-import { apiFetch } from './client';
+import { apiFetch, buildQueryString } from './client';
 import type { Slot, SlotList, CreateSlotRequest } from './types';
 
 interface ListSlotsParams {
@@ -8,15 +8,12 @@ interface ListSlotsParams {
 }
 
 export async function listSlots(params: ListSlotsParams = {}): Promise<Slot[]> {
-  const query = new URLSearchParams();
-  if (params.eventTypeId) query.set('eventTypeId', params.eventTypeId);
-  if (params.from) query.set('from', params.from);
-  if (params.to) query.set('to', params.to);
-
-  const queryString = query.toString();
-  const result = await apiFetch<SlotList>(
-    `/slots${queryString ? `?${queryString}` : ''}`,
-  );
+  const qs = buildQueryString({
+    eventTypeId: params.eventTypeId,
+    from: params.from,
+    to: params.to,
+  });
+  const result = await apiFetch<SlotList>(`/slots${qs}`);
   return result.items;
 }
 

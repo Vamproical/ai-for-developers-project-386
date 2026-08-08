@@ -12,7 +12,7 @@ describe('booking store', () => {
     expect(state.selectedSlot).toBeNull();
     expect(state.selectedEventType).toBeNull();
     expect(state.createdBooking).toBeNull();
-    expect(state.step).toBe(0);
+    expect(state.step).toBe('initial');
   });
 
   it('sets selected slot and advances step', () => {
@@ -20,7 +20,7 @@ describe('booking store', () => {
     useBookingStore.getState().setSelectedSlot(slot);
     const state = useBookingStore.getState();
     expect(state.selectedSlot).toEqual(slot);
-    expect(state.step).toBe(1);
+    expect(state.step).toBe('slot-selected');
   });
 
   it('sets selected event type and advances step', () => {
@@ -28,7 +28,7 @@ describe('booking store', () => {
     useBookingStore.getState().setSelectedEventType(eventType);
     const state = useBookingStore.getState();
     expect(state.selectedEventType).toEqual(eventType);
-    expect(state.step).toBe(2);
+    expect(state.step).toBe('event-selected');
   });
 
   it('sets created booking and advances step', () => {
@@ -36,7 +36,7 @@ describe('booking store', () => {
     useBookingStore.getState().setCreatedBooking(booking);
     const state = useBookingStore.getState();
     expect(state.createdBooking).toEqual(booking);
-    expect(state.step).toBe(3);
+    expect(state.step).toBe('confirmed');
   });
 
   it('resets all state', () => {
@@ -47,6 +47,6 @@ describe('booking store', () => {
     expect(state.selectedSlot).toBeNull();
     expect(state.selectedEventType).toBeNull();
     expect(state.createdBooking).toBeNull();
-    expect(state.step).toBe(0);
+    expect(state.step).toBe('initial');
   });
 });

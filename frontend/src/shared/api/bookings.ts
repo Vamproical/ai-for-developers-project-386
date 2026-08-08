@@ -1,14 +1,15 @@
-import { apiFetch } from './client';
+import { apiFetch, buildQueryString } from './client';
 import type {
   Booking,
   BookingList,
   CreateBookingRequest,
   UpdateBookingStatusRequest,
+  BookingStatus,
 } from './types';
 
 interface ListBookingsParams {
   eventTypeId?: string;
-  status?: 'confirmed' | 'cancelled';
+  status?: BookingStatus;
   from?: string;
   to?: string;
 }
@@ -16,16 +17,13 @@ interface ListBookingsParams {
 export async function listBookings(
   params: ListBookingsParams = {},
 ): Promise<Booking[]> {
-  const query = new URLSearchParams();
-  if (params.eventTypeId) query.set('eventTypeId', params.eventTypeId);
-  if (params.status) query.set('status', params.status);
-  if (params.from) query.set('from', params.from);
-  if (params.to) query.set('to', params.to);
-
-  const queryString = query.toString();
-  const result = await apiFetch<BookingList>(
-    `/bookings${queryString ? `?${queryString}` : ''}`,
-  );
+  const qs = buildQueryString({
+    eventTypeId: params.eventTypeId,
+    status: params.status,
+    from: params.from,
+    to: params.to,
+  });
+  const result = await apiFetch<BookingList>(`/bookings${qs}`);
   return result.items;
 }
 
@@ -38,11 +36,16 @@ export async function createBooking(
   });
 }
 
-export async function cancelBooking(
+export async function updateBookingStatus(
   id: string,
+  data: UpdateBookingStatusRequest,
 ): Promise<Booking> {
   return apiFetch<Booking>(`/bookings/${id}/cancel`, {
     method: 'PATCH',
-    body: JSON.stringify({ status: 'cancelled' } satisfies UpdateBookingStatusRequest),
+    body: JSON.stringify(data),
   });
+}
+
+export async function cancelBooking(id: string): Promise<Booking> {
+  return updateBookingStatus(id, { status: 'cancelled' });
 }
