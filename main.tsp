@@ -149,13 +149,13 @@ model Error {
 // ============================================================
 
 @route("/event-types")
-@tag("Public")
+@tag("PublicEventTypes")
 interface PublicEventTypes {
   @get list(): EventTypeList | Error;
 }
 
 @route("/slots")
-@tag("Public")
+@tag("PublicSlots")
 interface PublicSlots {
   @get list(
     @query eventTypeId?: string,
@@ -165,7 +165,7 @@ interface PublicSlots {
 }
 
 @route("/bookings")
-@tag("Public")
+@tag("PublicBookings")
 interface PublicBookings {
   @post create(@body body: CreateBookingRequest): Booking | Error;
 }
@@ -175,7 +175,7 @@ interface PublicBookings {
 // ============================================================
 
 @route("/admin/event-types")
-@tag("Admin")
+@tag("AdminEventTypes")
 interface AdminEventTypes {
   @get list(): EventTypeList | Error;
   @post create(@body body: CreateEventTypeRequest): EventType | Error;
@@ -184,7 +184,7 @@ interface AdminEventTypes {
 }
 
 @route("/admin/slots")
-@tag("Admin")
+@tag("AdminSlots")
 interface AdminSlots {
   @get list(
     @query eventTypeId?: string,
@@ -195,14 +195,14 @@ interface AdminSlots {
 }
 
 @route("/admin/schedules")
-@tag("Admin")
+@tag("AdminSchedules")
 interface AdminSchedules {
   @get list(): ScheduleList | Error;
   @post create(@body body: CreateScheduleRequest): Schedule | Error;
 }
 
 @route("/admin/bookings")
-@tag("Admin")
+@tag("AdminBookings")
 interface AdminBookings {
   @get list(
     @query eventTypeId?: string,
