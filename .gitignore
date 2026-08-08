@@ -7,3 +7,9 @@ dist/
 
 # Dependency directories
 node_modules/
+# Backend
+backend/.mvn/wrapper/dists/
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+*.class
+*.jar
