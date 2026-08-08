@@ -1,12 +1,12 @@
 package com.bookingcalendar.backend.mapper;
 
-import com.bookingcalendar.dto.EventTypeList;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface EventTypeMapper {
 
     @Mapping(target = "id", source = "id")
@@ -17,8 +17,8 @@ public interface EventTypeMapper {
 
     List<com.bookingcalendar.dto.EventType> toDtoList(List<com.bookingcalendar.backend.entity.EventType> entities);
 
-    default EventTypeList toEventTypeList(List<com.bookingcalendar.backend.entity.EventType> entities) {
-        EventTypeList list = new EventTypeList();
+    default com.bookingcalendar.dto.EventTypeList toEventTypeList(List<com.bookingcalendar.backend.entity.EventType> entities) {
+        com.bookingcalendar.dto.EventTypeList list = new com.bookingcalendar.dto.EventTypeList();
         list.setItems(toDtoList(entities));
         return list;
     }
