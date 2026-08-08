@@ -23,7 +23,7 @@ export async function listBookings(
     from: params.from,
     to: params.to,
   });
-  const result = await apiFetch<BookingList>(`/bookings${qs}`);
+  const result = await apiFetch<BookingList>(`/admin/bookings${qs}`);
   return result.items;
 }
 
@@ -40,7 +40,7 @@ export async function updateBookingStatus(
   id: string,
   data: UpdateBookingStatusRequest,
 ): Promise<Booking> {
-  return apiFetch<Booking>(`/bookings/${id}/cancel`, {
+  return apiFetch<Booking>(`/admin/bookings/${id}/cancel`, {
     method: 'PATCH',
     body: JSON.stringify(data),
   });
