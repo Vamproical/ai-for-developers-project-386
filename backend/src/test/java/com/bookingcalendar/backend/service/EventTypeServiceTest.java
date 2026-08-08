@@ -1,12 +1,14 @@
 package com.bookingcalendar.backend.service;
 
 import com.bookingcalendar.backend.entity.EventType;
+import com.bookingcalendar.backend.mapper.EventTypeMapper;
 import com.bookingcalendar.backend.repository.EventTypeRepository;
 import com.bookingcalendar.dto.EventTypeList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
@@ -19,6 +21,9 @@ class EventTypeServiceTest {
 
     @Mock
     private EventTypeRepository eventTypeRepository;
+
+    @Spy
+    private EventTypeMapper eventTypeMapper = EventTypeMapper.INSTANCE;
 
     @InjectMocks
     private EventTypeService eventTypeService;
