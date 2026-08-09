@@ -47,6 +47,14 @@ export class GuestPage extends BasePage {
     await this.page.getByText('Booking Confirmed', { exact: true }).waitFor({ state: 'visible' });
   }
 
+  async submitBookingExpectingErrors(...errorMessages: string[]): Promise<void> {
+    await this.page.getByRole('button', { name: 'Confirm Booking' }).click();
+
+    for (const message of errorMessages) {
+      await this.page.getByText(message, { exact: true }).waitFor({ state: 'visible' });
+    }
+  }
+
   async getConfirmation(): Promise<{
     eventName: string;
     guestName: string;

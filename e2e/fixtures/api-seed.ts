@@ -46,24 +46,44 @@ export interface ApiSeedCreateBookingInput {
   comment?: string;
 }
 
-async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
+interface ApiResponse<T> {
+  status: number;
+  statusText: string;
+  ok: boolean;
+  body: T | undefined;
+}
+
+async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<ApiResponse<T>> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: { 'Content-Type': 'application/json' },
     ...options,
   });
 
-  if (!response.ok) {
-    const errorText = await response.text().catch(() => '');
+  let body: T | undefined;
+  try {
+    body = await response.json();
+  } catch {
+    body = undefined;
+  }
+
+  return { status: response.status, statusText: response.statusText, ok: response.ok, body };
+}
+
+async function apiRequest<T>(path: string, options: RequestInit = {}): Promise<T> {
+  const { status, statusText, ok, body } = await apiFetch<T>(path, options);
+
+  if (!ok) {
+    const errorText = body !== undefined ? JSON.stringify(body) : '';
     throw new Error(
-      `API request failed: ${response.status} ${response.statusText} ${path} — ${errorText}`,
+      `API request failed: ${status} ${statusText} ${path} — ${errorText}`,
     );
   }
 
-  if (response.status === 204) {
+  if (status === 204) {
     return undefined as T;
   }
 
-  return response.json();
+  return body as T;
 }
 
 export async function listBookings(): Promise<ApiSeedBooking[]> {
@@ -104,6 +124,33 @@ export async function listSlots(params: { eventTypeId?: string } = {}): Promise<
 
 export async function createBooking(data: ApiSeedCreateBookingInput): Promise<ApiSeedBooking> {
   return apiRequest<ApiSeedBooking>('/bookings', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export interface ApiErrorResult {
+  status: number;
+  message?: string;
+}
+
+async function apiRequestExpectingError(
+  path: string,
+  options: RequestInit,
+): Promise<ApiErrorResult> {
+  const { status, body } = await apiFetch<{ message?: string }>(path, options);
+  return { status, message: body?.message };
+}
+
+export async function cancelBookingRaw(id: string): Promise<ApiErrorResult> {
+  return apiRequestExpectingError(`/admin/bookings/${id}/cancel`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status: 'cancelled' }),
+  });
+}
+
+export async function createBookingRaw(data: ApiSeedCreateBookingInput): Promise<ApiErrorResult> {
+  return apiRequestExpectingError('/bookings', {
     method: 'POST',
     body: JSON.stringify(data),
   });
