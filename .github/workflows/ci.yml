@@ -22,14 +22,30 @@ jobs:
 
       - run: npm ci
 
-      - name: Validate commit messages
-        run: npx commitlint --from ${{ github.event.before }} --to ${{ github.sha }} --verbose
+      - name: Validate commit messages (push)
+        if: github.event_name == 'push'
+        run: npx commitlint --from HEAD~1 --to HEAD --verbose
+
+      - name: Validate commit messages (pull_request)
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
   backend-tests:
     needs: commitlint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: package-lock.json
+
+      - run: npm ci
+
+      - name: Compile TypeSpec
+        run: npx tsp compile main.tsp
 
       - uses: actions/setup-java@v4
         with:
