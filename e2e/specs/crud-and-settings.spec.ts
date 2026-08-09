@@ -6,9 +6,9 @@ import { test, expect } from '../fixtures/base-fixtures';
 import {
   createBooking,
   createEventType,
-  createSchedule,
   listSlots,
 } from '../fixtures/api-seed';
+import { createWeeklySchedule } from '../fixtures/test-data';
 import { AdminBookingsPage } from '../pages/admin-bookings.page';
 import { AdminEventTypesPage } from '../pages/admin-event-types.page';
 import { AdminSchedulesPage } from '../pages/admin-schedules.page';
@@ -16,30 +16,6 @@ import { AdminSettingsPage } from '../pages/admin-settings.page';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-const WEEKDAYS = [1, 2, 3, 4, 5];
-
-function weekRange(): { startDate: string; endDate: string } {
-  const weekStart = dayjs.utc().startOf('day').add(11, 'hour');
-  const weekEnd = weekStart.add(6, 'day');
-  return {
-    startDate: weekStart.toISOString(),
-    endDate: weekEnd.toISOString(),
-  };
-}
-
-async function createWeeklySchedule(): Promise<{ startDate: string; endDate: string }> {
-  const { startDate, endDate } = weekRange();
-  const schedule = await createSchedule({
-    daysOfWeek: WEEKDAYS,
-    startTime: '09:00',
-    endTime: '17:00',
-    startDate,
-    endDate,
-    slotDurationMinutes: 30,
-  });
-  return { startDate: schedule.startDate, endDate: schedule.endDate };
-}
 
 test.describe('Event types — isolated CRUD', () => {
   test('admin edits an event type and sees the updated values in the table', async ({ page }) => {

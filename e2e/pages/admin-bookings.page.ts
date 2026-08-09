@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { expect } from '@playwright/test';
 import { BasePage } from './base.page';
 
 interface BookingRow {
@@ -93,5 +94,10 @@ export class AdminBookingsPage extends BasePage {
     }
 
     await modal.waitFor({ state: 'hidden' });
+  }
+
+  async waitForCancelDisabled(guestEmail: string): Promise<void> {
+    const row = this.page.locator('tbody tr', { hasText: guestEmail });
+    await expect(row.getByRole('button', { name: 'Cancel' })).toBeDisabled();
   }
 }
