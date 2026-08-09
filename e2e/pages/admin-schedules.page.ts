@@ -10,6 +10,10 @@ export class AdminSchedulesPage extends BasePage {
     await this.page.goto('/admin/schedules');
   }
 
+  async navigate(): Promise<void> {
+    await this.gotoAndWaitForLoad();
+  }
+
   async createSchedule(
     daysOfWeek: string[],
     startTime: string,
@@ -24,24 +28,30 @@ export class AdminSchedulesPage extends BasePage {
     await modal.waitFor({ state: 'visible' });
 
     for (const day of daysOfWeek) {
-      await this.page.getByLabel(day).check();
+      await modal.getByLabel(day).check();
     }
 
-    await this.page.getByLabel('Start time').fill(startTime);
-    await this.page.getByLabel('End time').fill(endTime);
-    await this.page.getByLabel('Start date').fill(startDate);
-    await this.page.getByLabel('End date').fill(endDate);
+    await modal.getByLabel('Start time').fill(startTime);
+    await modal.getByLabel('End time').fill(endTime);
+    await modal.getByLabel('Start date').fill(startDate);
+    await modal.getByLabel('End date').fill(endDate);
 
     if (slotDuration !== undefined) {
-      await this.page.getByLabel('Slot duration (minutes, optional)').fill(String(slotDuration));
+      await modal.getByLabel('Slot duration (minutes, optional)').fill(String(slotDuration));
     }
 
-    // Click the submit button within the modal context
-    await modal.getByRole('button', { name: 'Create' }).click();
+    const responsePromise = this.page.waitForResponse((response) =>
+      response.request().method() === 'POST'
+      && response.url().endsWith('/admin/schedules'),
+    );
+    await modal.getByRole('button', { name: 'Create', exact: true }).click();
+    const response = await responsePromise;
+    if (!response.ok()) {
+      throw new Error(`Schedule creation failed: ${response.status()} ${await response.text()}`);
+    }
 
     await modal.waitFor({ state: 'hidden' });
-    await this.page.waitForLoadState('networkidle');
-    await this.page.waitForTimeout(1000);
+    await this.page.locator('table tbody tr').first().waitFor({ state: 'visible' });
   }
 
   async getSchedules(): Promise<Array<{ days: string; time: string; dateRange: string; slotDuration: string }>> {

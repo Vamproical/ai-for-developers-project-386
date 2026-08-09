@@ -7,6 +7,9 @@ dist/
 
 # Dependency directories
 node_modules/
+playwright-report/
+test-results/
+frontend/.env
 # Backend
 backend/.mvn/wrapper/dists/
 backend/target/

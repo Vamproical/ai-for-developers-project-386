@@ -20,7 +20,6 @@ export default defineConfig({
     trace: 'on-first-retry',
     actionTimeout: 30_000,
     navigationTimeout: 30_000,
-    VITE_API_BASE_URL: apiBaseUrl,
   },
   expect: {
     timeout: 30_000,
@@ -29,6 +28,23 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+  ],
+  webServer: [
+    {
+      command: `npm --prefix "${projectRoot}" exec tsp compile "${projectRoot}/main.tsp" && "${projectRoot}/backend/mvnw" -f "${projectRoot}/backend/pom.xml" spring-boot:run -Dspring-boot.run.profiles=e2e`,
+      url: `${apiBaseUrl}/admin/event-types`,
+      reuseExistingServer: false,
+      timeout: 120_000,
+    },
+    {
+      command: `npm --prefix "${projectRoot}/frontend" run dev`,
+      url: baseURL,
+      reuseExistingServer: true,
+      timeout: 60_000,
+      env: {
+        VITE_API_BASE_URL: apiBaseUrl,
+      },
     },
   ],
 });

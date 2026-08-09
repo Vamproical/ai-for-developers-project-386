@@ -1,6 +1,13 @@
 import type { Page } from '@playwright/test';
 import { BasePage } from './base.page';
 
+interface BookingRow {
+  guest: string;
+  email: string;
+  eventType: string;
+  status: string;
+}
+
 export class AdminBookingsPage extends BasePage {
   constructor(page: Page) {
     super(page);
@@ -10,12 +17,16 @@ export class AdminBookingsPage extends BasePage {
     await this.page.goto('/admin/bookings');
   }
 
-  async getBookings(): Promise<Array<{ guest: string; email: string; eventType: string; status: string }>> {
+  async navigate(): Promise<void> {
+    await this.gotoAndWaitForLoad();
+  }
+
+  async getBookings(): Promise<BookingRow[]> {
     await this.page.waitForLoadState('networkidle');
 
     const rows = await this.page.locator('tbody tr').all();
 
-    const result: Array<{ guest: string; email: string; eventType: string; status: string }> = [];
+    const result: BookingRow[] = [];
 
     for (const row of rows) {
       const cells = await row.locator('td').all();
@@ -33,18 +44,34 @@ export class AdminBookingsPage extends BasePage {
   }
 
   async filterByEventType(eventTypeName: string): Promise<void> {
+    const responsePromise = this.page.waitForResponse((response) =>
+      response.url().includes('/admin/bookings?eventTypeId=')
+      && response.request().method() === 'GET',
+    );
     await this.page.getByRole('combobox', { name: 'Event type' }).click();
     await this.page.getByRole('option', { name: eventTypeName }).click();
-    await this.page.waitForLoadState('networkidle');
+    const response = await responsePromise;
+    if (!response.ok()) {
+      throw new Error(`Event type filter failed: ${response.status()} ${await response.text()}`);
+    }
+    await this.page.locator('table tbody tr').first().waitFor({ state: 'visible' });
   }
 
   async filterByStatus(status: string): Promise<void> {
+    const responsePromise = this.page.waitForResponse((response) =>
+      response.url().includes('status=confirmed')
+      && response.request().method() === 'GET',
+    );
     await this.page.getByRole('combobox', { name: 'Status' }).click();
     await this.page.getByRole('option', { name: status.charAt(0).toUpperCase() + status.slice(1) }).click();
-    await this.page.waitForLoadState('networkidle');
+    const response = await responsePromise;
+    if (!response.ok()) {
+      throw new Error(`Status filter failed: ${response.status()} ${await response.text()}`);
+    }
+    await this.page.locator('table tbody tr').first().waitFor({ state: 'visible' });
   }
 
-  async getFilteredBookings(): Promise<Array<{ guest: string; email: string; eventType: string; status: string }>> {
+  async getFilteredBookings(): Promise<BookingRow[]> {
     return this.getBookings();
   }
 }
