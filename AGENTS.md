@@ -26,6 +26,8 @@ Output dir configured in `tspconfig.yaml` → `{output-dir}/schema`.
 - Domain models live in `main.tsp` (Owner, EventType, Slot, Booking, Schedule)
 - Two API surfaces: **Public** (guest-facing: list event-types, list slots, create booking) and **Admin** (owner-facing: CRUD event-types, slots, schedules, bookings)
 - `frontend/` is a future concern — no build config or package.json there yet
+- Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) — enforced by `husky` + `commitlint` locally and CI workflow
+- See `CONTRIBUTING.md` for full commit message format and rules
 
 ## Agent skills
 
