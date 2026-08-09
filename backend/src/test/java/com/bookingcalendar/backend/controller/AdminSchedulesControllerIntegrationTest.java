@@ -1,6 +1,9 @@
 package com.bookingcalendar.backend.controller;
 
+import com.bookingcalendar.backend.entity.EventTypeEntity;
+import com.bookingcalendar.backend.repository.EventTypeRepository;
 import com.bookingcalendar.backend.repository.ScheduleRepository;
+import com.bookingcalendar.backend.repository.SlotRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -30,17 +34,26 @@ class AdminSchedulesControllerIntegrationTest {
     private ScheduleRepository scheduleRepository;
 
     @Autowired
+    private SlotRepository slotRepository;
+
+    @Autowired
+    private EventTypeRepository eventTypeRepository;
+
+    @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
+        slotRepository.deleteAll();
         scheduleRepository.deleteAll();
+        eventTypeRepository.deleteAll();
+        eventTypeRepository.save(new EventTypeEntity("Consultation", "A consultation", 30));
     }
 
     @Test
     void createSchedule_returns201WithCorrectFields() throws Exception {
         OffsetDateTime startDate = OffsetDateTime.parse("2026-01-01T00:00:00Z");
-        OffsetDateTime endDate = OffsetDateTime.parse("2026-12-31T00:00:00Z");
+        OffsetDateTime endDate = OffsetDateTime.parse("2026-01-07T00:00:00Z");
 
         Map<String, Object> request = Map.of(
                 "daysOfWeek", List.of(1, 3, 5),
@@ -61,12 +74,14 @@ class AdminSchedulesControllerIntegrationTest {
                 .andExpect(jsonPath("$.startTime").value("09:00"))
                 .andExpect(jsonPath("$.endTime").value("17:00"))
                 .andExpect(jsonPath("$.slotDurationMinutes").value(30));
+
+        assertEquals(48, slotRepository.count());
     }
 
     @Test
     void createSchedule_returns201WithOptionalFieldOmitted() throws Exception {
         OffsetDateTime startDate = OffsetDateTime.parse("2026-01-01T00:00:00Z");
-        OffsetDateTime endDate = OffsetDateTime.parse("2026-12-31T00:00:00Z");
+        OffsetDateTime endDate = OffsetDateTime.parse("2026-01-07T00:00:00Z");
 
         Map<String, Object> request = Map.of(
                 "daysOfWeek", List.of(1),
