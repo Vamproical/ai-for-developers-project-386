@@ -68,8 +68,8 @@ export function SlotBrowser({ onSlotSelect }: SlotBrowserProps) {
   const weekEnd = weekStart.add(6, 'day');
 
   const { data: slots, isLoading, isError } = useSlots({
-    from: weekStart.format('YYYY-MM-DD'),
-    to: weekEnd.format('YYYY-MM-DD'),
+    from: weekStart.startOf('day').toISOString(),
+    to: weekEnd.endOf('day').toISOString(),
   });
 
   const availableSlots = useMemo(

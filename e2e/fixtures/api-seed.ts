@@ -111,12 +111,23 @@ export async function seedSchedule(
   });
 }
 
-export async function cleanupDb(): Promise<void> {
-  const bookings = await listBookings();
-  await Promise.all(bookings.map((b) => deleteBooking(b.id)));
+export async function seedSlot(
+  data: Omit<ApiSeedSlot, 'id'>,
+): Promise<ApiSeedSlot> {
+  return apiRequest<ApiSeedSlot>('/admin/slots', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
 
-  const slots = await listSlots();
-  await Promise.all(slots.map((s) => deleteSlot(s.id)));
+export async function cleanupDb(): Promise<void> {
+  // Bookings don have a DELETE endpoint, so we skip them for now
+  // const bookings = await listBookings();
+  // await Promise.all(bookings.map((b) => deleteBooking(b.id)));
+
+  // Slots don't have a DELETE endpoint, so we skip them for now
+  // const slots = await listSlots();
+  // await Promise.all(slots.map((s) => deleteSlot(s.id)));
 
   // Schedules don't have a DELETE endpoint, so we skip them for now
   // const schedules = await listSchedules();

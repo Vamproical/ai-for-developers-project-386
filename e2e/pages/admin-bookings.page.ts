@@ -33,13 +33,13 @@ export class AdminBookingsPage extends BasePage {
   }
 
   async filterByEventType(eventTypeName: string): Promise<void> {
-    await this.page.getByLabel('Event type').click();
+    await this.page.getByRole('combobox', { name: 'Event type' }).click();
     await this.page.getByRole('option', { name: eventTypeName }).click();
     await this.page.waitForLoadState('networkidle');
   }
 
   async filterByStatus(status: string): Promise<void> {
-    await this.page.getByLabel('Status').click();
+    await this.page.getByRole('combobox', { name: 'Status' }).click();
     await this.page.getByRole('option', { name: status.charAt(0).toUpperCase() + status.slice(1) }).click();
     await this.page.waitForLoadState('networkidle');
   }

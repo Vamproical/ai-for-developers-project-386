@@ -20,6 +20,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     actionTimeout: 30_000,
     navigationTimeout: 30_000,
+    VITE_API_BASE_URL: apiBaseUrl,
   },
   expect: {
     timeout: 30_000,
@@ -30,15 +31,4 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  webServer: process.env.CI
-    ? undefined
-    : {
-        command: `cd ${projectRoot}/frontend && npm run dev`,
-        url: baseURL,
-        reuseExistingServer: true,
-        timeout: 60_000,
-        env: {
-          VITE_API_BASE_URL: apiBaseUrl,
-        },
-      },
 });

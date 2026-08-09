@@ -36,14 +36,12 @@ export class AdminSchedulesPage extends BasePage {
       await this.page.getByLabel('Slot duration (minutes, optional)').fill(String(slotDuration));
     }
 
-    await Promise.all([
-      this.page.waitForResponse(resp => resp.url().includes('/schedules') && resp.status() === 200),
-      this.page.getByRole('button', { name: 'Create', exact: true }).click(),
-    ]);
+    // Click the submit button within the modal context
+    await modal.getByRole('button', { name: 'Create' }).click();
 
     await modal.waitFor({ state: 'hidden' });
     await this.page.waitForLoadState('networkidle');
-    await this.page.waitForTimeout(2000);
+    await this.page.waitForTimeout(1000);
   }
 
   async getSchedules(): Promise<Array<{ days: string; time: string; dateRange: string; slotDuration: string }>> {

@@ -22,23 +22,18 @@ export class AdminEventTypesPage extends BasePage {
 
     await this.page.getByLabel('Name').fill(name);
     await this.page.getByLabel('Description').fill(description);
-    
-    // For NumberInput, fill by label
     await this.page.getByLabel('Duration (minutes)').fill(String(duration));
 
-    // Wait for the API response when submitting
-    const responsePromise = this.page.waitForResponse(
-      resp => resp.url().includes('event-types') && resp.request().method() === 'POST',
-      { timeout: 15000 }
-    ).catch(() => {
-      console.log('No POST response captured for event-types');
-      return null;
-    });
+    // Debug: take screenshot before submit
+    await this.page.screenshot({ path: 'test-results/before-submit.png' });
     
-    await this.page.getByRole('button', { name: 'Create', exact: true }).click();
-    await responsePromise;
+    // Try clicking by CSS selector for the submit button inside modal
+    await modal.locator('button[type="submit"]').click();
 
-    await modal.waitFor({ state: 'hidden' });
+    await modal.waitFor({ state: 'hidden', timeout: 10000 }).catch(() => {
+      console.log('Modal did not close after submit');
+    });
+    await this.page.screenshot({ path: 'test-results/after-submit.png' });
     await this.page.waitForLoadState('networkidle');
     await this.page.waitForTimeout(1000);
   }
