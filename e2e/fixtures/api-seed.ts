@@ -72,7 +72,7 @@ async function listSlots(): Promise<ApiSeedSlot[]> {
   return result.items;
 }
 
-async function listBookings(): Promise<ApiSeedBooking[]> {
+export async function listBookings(): Promise<ApiSeedBooking[]> {
   const result = await apiRequest<{ items: ApiSeedBooking[] }>('/admin/bookings');
   return result.items;
 }
@@ -118,8 +118,9 @@ export async function cleanupDb(): Promise<void> {
   const slots = await listSlots();
   await Promise.all(slots.map((s) => deleteSlot(s.id)));
 
-  const schedules = await listSchedules();
-  await Promise.all(schedules.map((s) => deleteSchedule(s.id)));
+  // Schedules don't have a DELETE endpoint, so we skip them for now
+  // const schedules = await listSchedules();
+  // await Promise.all(schedules.map((s) => deleteSchedule(s.id)));
 
   const eventTypes = await listEventTypes();
   await Promise.all(eventTypes.map((et) => deleteEventType(et.id)));

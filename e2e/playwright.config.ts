@@ -1,10 +1,15 @@
 import { defineConfig, devices } from '@playwright/test';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const projectRoot = path.resolve(__dirname, '..');
 
 const baseURL = process.env.BASE_URL ?? 'http://localhost:5173';
 const apiBaseUrl = process.env.VITE_API_BASE_URL ?? 'http://localhost:8080';
 
 export default defineConfig({
-  testDir: './e2e',
+  testDir: __dirname,
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
@@ -28,7 +33,7 @@ export default defineConfig({
   webServer: process.env.CI
     ? undefined
     : {
-        command: 'cd frontend && npm run dev',
+        command: `cd ${projectRoot}/frontend && npm run dev`,
         url: baseURL,
         reuseExistingServer: true,
         timeout: 60_000,
