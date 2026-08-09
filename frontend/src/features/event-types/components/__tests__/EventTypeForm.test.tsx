@@ -87,11 +87,14 @@ describe('EventTypeForm', () => {
     const submitButton = screen.getByRole('button', { name: /create/i });
     await user.click(submitButton);
 
-    expect(mockCreate).toHaveBeenCalledWith({
-      name: 'Workshop',
-      description: '2 hour session',
-      durationMinutes: 120,
-    });
+    expect(mockCreate).toHaveBeenCalledWith(
+      {
+        name: 'Workshop',
+        description: '2 hour session',
+        durationMinutes: 120,
+      },
+      { onSuccess: expect.any(Function) },
+    );
   });
 
   it('calls onUpdate with id and data when editing', async () => {
@@ -113,9 +116,12 @@ describe('EventTypeForm', () => {
     const submitButton = screen.getByRole('button', { name: /save/i });
     await user.click(submitButton);
 
-    expect(mockUpdate).toHaveBeenCalledWith({
-      id: '1',
-      data: { name: 'New Name', description: 'Old desc', durationMinutes: 30 },
-    });
+    expect(mockUpdate).toHaveBeenCalledWith(
+      {
+        id: '1',
+        data: { name: 'New Name', description: 'Old desc', durationMinutes: 30 },
+      },
+      { onSuccess: expect.any(Function) },
+    );
   });
 });

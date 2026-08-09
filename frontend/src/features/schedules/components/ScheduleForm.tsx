@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, Controller } from 'react-hook-form';
 import { scheduleFormSchema } from '@/shared/lib/validation';
 import type { ScheduleFormValues } from '@/shared/lib/validation';
-import type { Schedule } from '@/shared/api/types';
+import type { CreateScheduleRequest, DayOfWeek as DayOfWeekValue, Schedule } from '@/shared/api/types';
 import { DayOfWeek } from '@/shared/api/types';
 import { useCreateSchedule, useUpdateSchedule } from '../hooks/useSchedules';
 
@@ -50,18 +50,18 @@ export function ScheduleForm({ mode, schedule, onClose }: ScheduleFormProps) {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   const onSubmit = (data: ScheduleFormValues) => {
-    const payload = {
+    const payload: CreateScheduleRequest = {
       ...data,
+      daysOfWeek: data.daysOfWeek as DayOfWeekValue[],
       startDate: new Date(data.startDate).toISOString(),
       endDate: new Date(data.endDate).toISOString(),
     };
 
     if (mode === 'create') {
-      createMutation.mutate(payload);
+      createMutation.mutate(payload, { onSuccess: onClose });
     } else if (schedule) {
-      updateMutation.mutate({ id: schedule.id, data: payload });
+      updateMutation.mutate({ id: schedule.id, data: payload }, { onSuccess: onClose });
     }
-    onClose();
   };
 
   return (

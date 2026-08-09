@@ -143,6 +143,7 @@ export function SlotBrowser({ onSlotSelect }: SlotBrowserProps) {
                   return (
                     <SlotChip
                       key={slot.id}
+                      slotId={slot.id}
                       time={time}
                       selected={selectedSlotId === slot.id}
                       onSelect={() => handleSlotClick(slot)}
