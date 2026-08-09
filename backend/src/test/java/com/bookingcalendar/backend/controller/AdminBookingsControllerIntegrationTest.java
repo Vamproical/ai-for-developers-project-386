@@ -80,7 +80,7 @@ class AdminBookingsControllerIntegrationTest {
 
     @Test
     void listBookings_filtersByStatus() throws Exception {
-        mockMvc.perform(get("/admin/bookings").param("status", "CONFIRMED"))
+        mockMvc.perform(get("/admin/bookings").param("status", "confirmed"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.items").isArray())
                 .andExpect(jsonPath("$.items.length()").value(1));

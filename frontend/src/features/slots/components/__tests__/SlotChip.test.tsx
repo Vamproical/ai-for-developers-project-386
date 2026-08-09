@@ -20,7 +20,7 @@ const createWrapper = () => {
 
 describe('SlotChip', () => {
   it('renders time label', () => {
-    render(<SlotChip time="10:00" selected={false} onSelect={vi.fn()} />, {
+    render(<SlotChip slotId="slot-1" time="10:00" selected={false} onSelect={vi.fn()} />, {
       wrapper: createWrapper(),
     });
 
@@ -31,7 +31,7 @@ describe('SlotChip', () => {
     const handleSelect = vi.fn();
     const user = userEvent.setup();
 
-    render(<SlotChip time="10:00" selected={false} onSelect={handleSelect} />, {
+    render(<SlotChip slotId="slot-1" time="10:00" selected={false} onSelect={handleSelect} />, {
       wrapper: createWrapper(),
     });
 
@@ -40,7 +40,7 @@ describe('SlotChip', () => {
   });
 
   it('applies selected styling when selected', () => {
-    render(<SlotChip time="10:00" selected onSelect={vi.fn()} />, {
+    render(<SlotChip slotId="slot-1" time="10:00" selected onSelect={vi.fn()} />, {
       wrapper: createWrapper(),
     });
 

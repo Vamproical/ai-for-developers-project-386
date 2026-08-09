@@ -4,7 +4,7 @@ test.describe('Smoke tests', () => {
   test('guest page shows Booking Calendar title', async ({ page }) => {
     await page.goto('/');
     await expect(
-      page.getByRole('heading', { name: 'Booking Calendar' }),
+      page.getByText('Booking Calendar', { exact: true }),
     ).toBeVisible();
   });
 

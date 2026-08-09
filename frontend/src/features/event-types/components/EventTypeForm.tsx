@@ -32,22 +32,27 @@ export function EventTypeForm({ mode, eventType, onClose }: EventTypeFormProps) 
 
   const onSubmit = (data: EventTypeFormValues) => {
     if (mode === 'create') {
-      createMutation.mutate({
-        name: data.name,
-        description: data.description,
-        durationMinutes: data.durationMinutes,
-      });
-    } else if (eventType) {
-      updateMutation.mutate({
-        id: eventType.id,
-        data: {
+      createMutation.mutate(
+        {
           name: data.name,
           description: data.description,
           durationMinutes: data.durationMinutes,
         },
-      });
+        { onSuccess: onClose },
+      );
+    } else if (eventType) {
+      updateMutation.mutate(
+        {
+          id: eventType.id,
+          data: {
+            name: data.name,
+            description: data.description,
+            durationMinutes: data.durationMinutes,
+          },
+        },
+        { onSuccess: onClose },
+      );
     }
-    onClose();
   };
 
   const isPending = createMutation.isPending || updateMutation.isPending;
