@@ -60,4 +60,57 @@ export class AdminEventTypesPage extends BasePage {
 
     return result;
   }
+
+  async editEventType(
+    name: string,
+    changes: { name?: string; description?: string; durationMinutes?: number },
+  ): Promise<void> {
+    const row = this.page.locator('table tbody tr', { hasText: name });
+    await row.getByRole('button', { name: 'Edit' }).click();
+
+    const modal = this.page.getByRole('dialog');
+    await modal.waitFor({ state: 'visible' });
+
+    if (changes.name !== undefined) {
+      await modal.getByLabel('Name').fill(changes.name);
+    }
+    if (changes.description !== undefined) {
+      await modal.getByLabel('Description').fill(changes.description);
+    }
+    if (changes.durationMinutes !== undefined) {
+      await modal.getByLabel('Duration (minutes)').fill(String(changes.durationMinutes));
+    }
+
+    const responsePromise = this.page.waitForResponse((response) =>
+      response.request().method() === 'PUT'
+      && /\/admin\/event-types\/[^/]+$/.test(response.url()),
+    );
+    await modal.getByRole('button', { name: 'Save', exact: true }).click();
+    const response = await responsePromise;
+    if (!response.ok()) {
+      throw new Error(`Event type update failed: ${response.status()} ${await response.text()}`);
+    }
+
+    await modal.waitFor({ state: 'hidden' });
+  }
+
+  async deleteEventType(name: string): Promise<void> {
+    const row = this.page.locator('table tbody tr', { hasText: name });
+    await row.getByRole('button', { name: 'Delete' }).click();
+
+    const modal = this.page.getByRole('dialog');
+    await modal.waitFor({ state: 'visible' });
+
+    const responsePromise = this.page.waitForResponse((response) =>
+      response.request().method() === 'DELETE'
+      && /\/admin\/event-types\/[^/]+$/.test(response.url()),
+    );
+    await modal.getByRole('button', { name: 'Delete', exact: true }).click();
+    const response = await responsePromise;
+    if (!response.ok()) {
+      throw new Error(`Event type deletion failed: ${response.status()} ${await response.text()}`);
+    }
+
+    await modal.waitFor({ state: 'hidden' });
+  }
 }

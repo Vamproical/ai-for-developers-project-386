@@ -74,4 +74,24 @@ export class AdminBookingsPage extends BasePage {
   async getFilteredBookings(): Promise<BookingRow[]> {
     return this.getBookings();
   }
+
+  async cancelBooking(guestEmail: string): Promise<void> {
+    const row = this.page.locator('tbody tr', { hasText: guestEmail });
+    await row.getByRole('button', { name: 'Cancel' }).click();
+
+    const modal = this.page.getByRole('dialog');
+    await modal.waitFor({ state: 'visible' });
+
+    const responsePromise = this.page.waitForResponse((response) =>
+      response.request().method() === 'PATCH'
+      && response.url().endsWith('/cancel'),
+    );
+    await modal.getByRole('button', { name: 'Yes, cancel' }).click();
+    const response = await responsePromise;
+    if (!response.ok()) {
+      throw new Error(`Booking cancellation failed: ${response.status()} ${await response.text()}`);
+    }
+
+    await modal.waitFor({ state: 'hidden' });
+  }
 }
