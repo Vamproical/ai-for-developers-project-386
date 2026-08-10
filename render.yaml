@@ -13,8 +13,10 @@ services:
     dockerContext: .
     plan: free
     envVars:
-      - key: BACKEND_URL
+      - key: BACKEND_PROTO
+        value: https
+      - key: BACKEND_HOST
         fromService:
           type: web
           name: booking-calendar-backend
-          property: url
+          property: host
