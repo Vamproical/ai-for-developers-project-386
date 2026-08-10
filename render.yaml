@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: booking-calendar-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: .
+    plan: free
+
+  - type: web
+    name: booking-calendar-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: booking-calendar-backend
+          property: url

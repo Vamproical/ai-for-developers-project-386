@@ -16,14 +16,14 @@ server {
     proxy_set_header X-Forwarded-Proto $scheme;
 
     # Public API
-    location = /event-types { proxy_pass http://backend:${PORT}; }
-    location = /slots { proxy_pass http://backend:${PORT}; }
-    location = /bookings { proxy_pass http://backend:${PORT}; }
+    location = /event-types { proxy_pass ${BACKEND_URL}; }
+    location = /slots { proxy_pass ${BACKEND_URL}; }
+    location = /bookings { proxy_pass ${BACKEND_URL}; }
 
     # Admin API (no SPA route collision)
-    location = /admin/slots { proxy_pass http://backend:${PORT}; }
-    location ~ ^/admin/event-types/[^/]+$ { proxy_pass http://backend:${PORT}; }
-    location ~ ^/admin/bookings/[^/]+/cancel$ { proxy_pass http://backend:${PORT}; }
+    location = /admin/slots { proxy_pass ${BACKEND_URL}; }
+    location ~ ^/admin/event-types/[^/]+$ { proxy_pass ${BACKEND_URL}; }
+    location ~ ^/admin/bookings/[^/]+/cancel$ { proxy_pass ${BACKEND_URL}; }
 
     # Admin API paths that are also SPA routes — browser navigation (Accept: text/html)
     # gets the SPA shell, JSON API calls (fetch) are proxied to the backend.
@@ -31,7 +31,7 @@ server {
         if ($spa_request = 1) {
             rewrite ^ /index.html last;
         }
-        proxy_pass http://backend:${PORT};
+        proxy_pass ${BACKEND_URL};
     }
 
     # Static assets (hashed filenames)
