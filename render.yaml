@@ -15,8 +15,8 @@ services:
     envVars:
       - key: BACKEND_PROTO
         value: https
+      # Literal public hostname: `fromService.property: host` returns the internal
+      # hostname (e.g. booking-calendar-backend-1fht) which free-tier services can't
+      # resolve. Update this if the backend service is ever deleted and recreated.
       - key: BACKEND_HOST
-        fromService:
-          type: web
-          name: booking-calendar-backend
-          property: host
+        value: booking-calendar-backend-1fht.onrender.com

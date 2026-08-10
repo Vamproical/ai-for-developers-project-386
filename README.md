@@ -7,8 +7,8 @@ A full-stack booking calendar: a React SPA (Vite + Mantine) backed by a Spring B
 
 ## Live demo
 
-- Public site: <https://booking-calendar-frontend.onrender.com>
-- Admin panel: <https://booking-calendar-frontend.onrender.com/admin>
+- Public site: <https://booking-calendar-frontend-16nv.onrender.com>
+- Admin panel: <https://booking-calendar-frontend-16nv.onrender.com/admin>
 
 > Note: the free Render tier sleeps when idle — the first load after a period of inactivity can take ~30 seconds to wake up.
 
